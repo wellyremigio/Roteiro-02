@@ -29,42 +29,70 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 	protected static int MERGESORT_APPLICATIONS = 0;
 	protected static int INSERTIONSORT_APPLICATIONS = 0;
 
-	public void sort(T[] array, int leftIndex, int rightIndex) {
-		T[] arrayAux = (T[]) new Comparable[array.length];
-		
-	}
-	//https://iq.opengenus.org/merge-insertion-sort/
 	
-	private void intercalar(T[] array, T[] arrayAux, int leftIndex, int meio, int rightIndex) {
-		for(int k = leftIndex; k <= rightIndex; k++) {
-			arrayAux[k] = array[k];
-		}
-		
-		int esquerda = leftIndex;
-		int direita = meio+1;
-		
-		for(int i = leftIndex; i <= rightIndex; i++) {
-			if(esquerda > meio) {
-				array[i] = arrayAux[direita++];
-			} else if(direita > rightIndex) {
-				array[i] = arrayAux[esquerda++];
-			} else if(arrayAux[esquerda].compareTo(arrayAux[direita]) < 0) {
-				array[i] = arrayAux[esquerda++];
-			} else {
-				array[i] = arrayAux[direita++];
+	public void sort(T[] array, int leftIndex, int rightIndex) {
+		if(leftIndex < rightIndex) {
+			if(array.length > 4) {
+				int middle = (leftIndex + rightIndex) / 2;
+				sort(array, leftIndex, middle);
+				sort(array, middle+1, rightIndex);
+				merge(array, leftIndex, middle, rightIndex);
+				MERGESORT_APPLICATIONS += 1;
+				
+			}else {
+				insertionSort(array, leftIndex, rightIndex);
+				
 			}
 		}
 	}
 	
 	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
-		for(int i = leftIndex + 1; i <= rightIndex; i++) {
+		for(int i = leftIndex+1; i <= rightIndex; i++) {
 			T chave = array[i];
-			int j = i - 1;
+			int j = i-1;
 			while(j >= 0 && array[j].compareTo(chave) > 0) {
 				array[j+1] = array[j];
 				j--;
 			}
 			array[j+1] = chave;
 		}
+		INSERTIONSORT_APPLICATIONS += 1; 
+	}
+	
+	
+
+	private void merge(T[] array, int inicio, int meio, int fim) {
+		T[] arrayAux = (T[]) new Comparable[array.length];
+		for(int k = inicio; k <= fim; k++) {
+			arrayAux[k] = array[k];
+		}
+	
+		int i = inicio;
+		int j = meio+1;
+		int k = inicio;
+		
+		while(i <= meio && j <= fim) {
+			if(arrayAux[i].compareTo(arrayAux[j]) < 0){
+				array[k] = arrayAux[i];
+				i++;
+			}else {
+				array[k] = arrayAux[j];
+				j++;
+			}
+			k++;
+			
+		}
+		
+		while (i <= meio) {
+			array[k] = arrayAux[i];
+			i++;
+			k++;
+		}
+		while(j <= meio) {
+			array[k] = arrayAux[j];
+			j++;
+			k++;
+		}
+		MERGESORT_APPLICATIONS += 1;
 	}
 }
