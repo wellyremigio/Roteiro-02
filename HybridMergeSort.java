@@ -99,4 +99,17 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 			array[j+1] = chave;
 		}
 	}
+	
+	/*
+	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
+		for(int i = leftIndex+1; i <= rightIndex; i++) {
+			//T chave = array[i];
+			int j = i;
+			while(j > 0 && array[j].compareTo(array[j-1]) < 0) {
+				Util.swap(array, j, j-1);
+				j--;
+			}
+		}
+	}
+	*/
 }
