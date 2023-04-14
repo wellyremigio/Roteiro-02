@@ -29,39 +29,33 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 	protected static int MERGESORT_APPLICATIONS = 0;
 	protected static int INSERTIONSORT_APPLICATIONS = 0;
 
+	public void sort(T[] array) {
+		MERGESORT_APPLICATIONS = 0;
+		INSERTIONSORT_APPLICATIONS = 0;
+		sort(array, 0, array.length - 1);
+	}
 	
 	public void sort(T[] array, int leftIndex, int rightIndex) {
-		if(leftIndex < rightIndex) {
-			if(array.length > 4) {
-				int middle = (leftIndex + rightIndex) / 2;
-				sort(array, leftIndex, middle);
-				sort(array, middle+1, rightIndex);
-				merge(array, leftIndex, middle, rightIndex);
-				MERGESORT_APPLICATIONS += 1;
-				
-			}else {
+		if(leftIndex < rightIndex && rightIndex < array.length && leftIndex >= 0) {
+			if(rightIndex - leftIndex + 1 <= SIZE_LIMIT) {
 				insertionSort(array, leftIndex, rightIndex);
-				
+				INSERTIONSORT_APPLICATIONS++;
+			}else {
+				mergeSort(array, leftIndex, rightIndex);
+				MERGESORT_APPLICATIONS++;
 			}
 		}
 	}
-	
-	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
-		for(int i = leftIndex+1; i <= rightIndex; i++) {
-			T chave = array[i];
-			int j = i-1;
-			while(j >= 0 && array[j].compareTo(chave) > 0) {
-				array[j+1] = array[j];
-				j--;
-			}
-			array[j+1] = chave;
-		}
-		INSERTIONSORT_APPLICATIONS += 1; 
+		
+	private void mergeSort(T[] array, int leftIndex, int rightIndex) {
+		int middle = (leftIndex + rightIndex) / 2;
+		sort(array, leftIndex, middle);
+		sort(array, middle+1, rightIndex);
+		merge(array, leftIndex, middle, rightIndex);
 	}
 	
-	
-
 	private void merge(T[] array, int inicio, int meio, int fim) {
+		@SuppressWarnings("unchecked")
 		T[] arrayAux = (T[]) new Comparable[array.length];
 		for(int k = inicio; k <= fim; k++) {
 			arrayAux[k] = array[k];
@@ -80,7 +74,6 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 				j++;
 			}
 			k++;
-			
 		}
 		
 		while (i <= meio) {
@@ -93,6 +86,17 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 			j++;
 			k++;
 		}
-		MERGESORT_APPLICATIONS += 1;
+	}
+	
+	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
+		for(int i = leftIndex+1; i <= rightIndex; i++) {
+			T chave = array[i];
+			int j = i-1;
+			while(j >= 0 && array[j].compareTo(chave) > 0) {
+				array[j+1] = array[j];
+				j--;
+			}
+			array[j+1] = chave;
+		}
 	}
 }
