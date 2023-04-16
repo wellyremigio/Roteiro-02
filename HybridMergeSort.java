@@ -1,6 +1,7 @@
 package sorting.divideAndConquer.hybridMergesort;
 
 import sorting.AbstractSorting;
+import util.Util;
 
 /**
  * A classe HybridMergeSort representa a implementação de uma variação do
@@ -23,18 +24,19 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 	/**
 	 * For inputs with size less or equal to this value, the insertionsort
 	 * algorithm will be used instead of the mergesort.
+	 * //https://iq.opengenus.org/merge-insertion-sort/
 	 */
 	public static final int SIZE_LIMIT = 4;
 
 	protected static int MERGESORT_APPLICATIONS = 0;
 	protected static int INSERTIONSORT_APPLICATIONS = 0;
-
+	
 	public void sort(T[] array) {
 		MERGESORT_APPLICATIONS = 0;
 		INSERTIONSORT_APPLICATIONS = 0;
 		sort(array, 0, array.length - 1);
 	}
-	
+
 	public void sort(T[] array, int leftIndex, int rightIndex) {
 		if(leftIndex < rightIndex && rightIndex < array.length && leftIndex >= 0) {
 			if(rightIndex - leftIndex + 1 <= SIZE_LIMIT) {
@@ -46,70 +48,56 @@ public class HybridMergeSort<T extends Comparable<T>> extends
 			}
 		}
 	}
-		
-	private void mergeSort(T[] array, int leftIndex, int rightIndex) {
-		int middle = (leftIndex + rightIndex) / 2;
-		sort(array, leftIndex, middle);
-		sort(array, middle+1, rightIndex);
-		merge(array, leftIndex, middle, rightIndex);
-	}
-	
-	private void merge(T[] array, int inicio, int meio, int fim) {
-		@SuppressWarnings("unchecked")
-		T[] arrayAux = (T[]) new Comparable[array.length];
-		for(int k = inicio; k <= fim; k++) {
-			arrayAux[k] = array[k];
-		}
-	
-		int i = inicio;
-		int j = meio+1;
-		int k = inicio;
-		
-		while(i <= meio && j <= fim) {
-			if(arrayAux[i].compareTo(arrayAux[j]) < 0){
-				array[k] = arrayAux[i];
-				i++;
-			}else {
-				array[k] = arrayAux[j];
-				j++;
-			}
-			k++;
-		}
-		
-		while (i <= meio) {
-			array[k] = arrayAux[i];
-			i++;
-			k++;
-		}
-		while(j <= meio) {
-			array[k] = arrayAux[j];
-			j++;
-			k++;
-		}
-	}
 	
 	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
-		for(int i = leftIndex+1; i <= rightIndex; i++) {
-			T chave = array[i];
-			int j = i-1;
-			while(j >= 0 && array[j].compareTo(chave) > 0) {
-				array[j+1] = array[j];
-				j--;
-			}
-			array[j+1] = chave;
-		}
-	}
-	
-	/*
-	private void insertionSort(T[] array, int leftIndex, int rightIndex) {
-		for(int i = leftIndex+1; i <= rightIndex; i++) {
-			//T chave = array[i];
+		int i = leftIndex + 1;
+		while(i <= rightIndex) {
 			int j = i;
-			while(j > 0 && array[j].compareTo(array[j-1]) < 0) {
+			while(j > leftIndex && array[j].compareTo(array[j-1]) < 0) {
 				Util.swap(array, j, j-1);
 				j--;
 			}
+			i++;
 		}
 	}
-	*/
+	
+	
+	private void mergeSort(T[] array, int leftIndex, int rightIndex) {
+		if(leftIndex >= rightIndex) {
+			return;
+		}else {
+			int middle = (leftIndex + rightIndex) / 2;
+			mergeSort(array, leftIndex, middle);
+			mergeSort(array, middle + 1, rightIndex);
+			merge(array, leftIndex, middle, rightIndex);
+		}
+	}
+	
+	private void merge(T[] array, int leftIndex, int middle, int rightIndex) {
+		T[] arrayAux = (T[]) new Comparable[array.length];
+		for(int i = leftIndex; i <= rightIndex; i++) {
+			arrayAux[i] = array[i];
+		}
+		
+		int i = leftIndex;
+		int j = middle + 1;
+		int k = leftIndex;
+		
+		while(i <= middle && j <= rightIndex) {
+			if(arrayAux[i].compareTo(arrayAux[j]) < 0 || arrayAux[i].compareTo(arrayAux[j]) == 0) {
+				array[k++] = arrayAux[i++];
+			}else {
+				array[k++] = arrayAux[j++];
+			}
+		}
+		
+		while(i <= middle) {
+			array[k++] = arrayAux[i++];
+		}
+		
+		while(j <= rightIndex) {
+			array[k++] = arrayAux[j++];
+		}
+	}
+	
 }
