@@ -19,6 +19,8 @@ public class StudentSortingTest {
 	private Integer[] vetorVazio = {};
 	private Integer[] vetorValoresRepetidos;
 	private Integer[] vetorValoresIguais;
+	private Integer[] vetorDecrescente;
+	private Integer[] vetorValoresNegativos;
 
 	public AbstractSorting<Integer> implementation;
 
@@ -30,6 +32,8 @@ public class StudentSortingTest {
 				11, 18, 36 });
 		populaVetorRepetido(new Integer[] { 4, 9, 3, 4, 0, 5, 1, 4 });
 		populaVetorIgual(new Integer[] { 6, 6, 6, 6, 6, 6 });
+		populaVetorDecrescente(new Integer[] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
+		populaVetorValoresNegativos(new Integer[] {-1, -17, -5, -30, -81, -105, 37});
 
 		getImplementation();
 	}
@@ -40,9 +44,9 @@ public class StudentSortingTest {
 	 * do aluno
 	 */
 	private void getImplementation() {
-		//this.implementation = new MergeSort<Integer>(); //Done
-		//this.implementation = new QuickSort<Integer>();
-		//this.implementation = new QuickSortMedianOfThree<Integer>();
+		this.implementation = new MergeSort<Integer>(); 
+		this.implementation = new QuickSort<Integer>();
+		this.implementation = new QuickSortMedianOfThree<Integer>();
 		this.implementation = new HybridMergeSort<Integer>();
 	} 
 
@@ -62,6 +66,14 @@ public class StudentSortingTest {
 	public void populaVetorIgual(Integer[] arrayPadrao) {
 		this.vetorValoresIguais = Arrays
 				.copyOf(arrayPadrao, arrayPadrao.length);
+	}
+	
+	public void populaVetorDecrescente(Integer[] arrayPadrao) {
+		this.vetorDecrescente = Arrays.copyOf(arrayPadrao, arrayPadrao.length);
+	}
+	
+	public void populaVetorValoresNegativos(Integer[] arrayPadrao) {
+		this.vetorValoresNegativos = Arrays.copyOf(arrayPadrao, arrayPadrao.length);
 	}
 
 	// FIM DOS METODOS AUXILIARES DA INICIALIZAÇÃO
@@ -102,12 +114,47 @@ public class StudentSortingTest {
 	public void testSort05() {
 		genericTest(vetorValoresRepetidos);
 	}
-
+	
 	// MÉTODOS QUE OS ALUNOS PODEM CRIAR
-	/**
-	 * O ALUNO PODE IMPLEMENTAR METODOS DE ORDENAÇÃO TESTANDO O SORT COM TRES
-	 * ARGUMENTOS PARA TESTAR A ORDENACAO EM UM PEDAÇO DO ARRAY. DICA: PROCUREM
-	 * SEGUIR A ESTRUTURA DOS MÉTODOS DE TESTE ACIMA DESCRITOS, ORDENANDO APENAS
-	 * UMA PARTE DO ARRAY.
-	 */
+	
+
+	public void myGenericTest(Integer[] array) {
+		Integer[] copy  = {};
+		if(array.length > 0) {
+			copy = Arrays.copyOf(array, array.length);
+		}
+		implementation.sort(array, 2, 5);
+		Arrays.sort(copy, 2, 6);
+		Assert.assertArrayEquals(copy, array);
+	}
+	
+	@Test
+	public void testSort06() {
+		myGenericTest(vetorTamPar);
+	}
+	
+	@Test
+	public void testSort07() {
+		myGenericTest(vetorTamImpar);
+	}
+	
+	@Test
+	public void testSort08() {
+		myGenericTest(vetorValoresIguais);
+	}
+	
+	@Test
+	public void testSort09() {
+		myGenericTest(vetorValoresRepetidos);
+	}
+	
+	@Test
+	public void testSort10() {
+		myGenericTest(vetorDecrescente);
+	}
+	
+	@Test
+	public void testSort11() {
+		myGenericTest(vetorValoresNegativos);
+	}
 }
